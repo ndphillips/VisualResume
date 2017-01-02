@@ -105,8 +105,7 @@ VisualResume <- function(titles.left = c("Main Title", "Sub-title", "Sub-Sub-tit
   #                  sub = c("a", "b", "c", "d", "e", "f"),
   #                  start = c(2001.5, 2006.5, 2011, 2012, 2014.7, 2016.1),
   #                  end = c(2005.5, 2010.9, 2014.5, 2014.6, 2016, 2017),
-  #                  point.x = c(2002, 2007, 2011.2, 2015.5, 2015.5, 2016.3),
-  #                  point.y = rep(55, 6)
+  #                  point.x = c(2002, 2007, 2011.2, 2015.5, 2015.5, 2016.3)
   # )
   # bottom = data.frame(title = c("G", "H", "I", "J", "K", "L", "M", "N"),
   #                     sub = c("g", "h", "i", "j", "k", "l", "m", "n"),
