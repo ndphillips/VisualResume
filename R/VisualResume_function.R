@@ -30,7 +30,7 @@
 #' @examples
 #'
 #'
-#'Visual.Resume(
+#'VisualResume(
 #'  titles.left = c("Walter White, PhD", "Chemistry, Cooking, Pizza", "*Built with love in R using the InfoResume package: www.ndphillips.github.io/inforesume"),
 #'  titles.right = c("www.lospolloshermanos.com", "TheOneWhoKnocks@gmail.com", "Full Resume: www.ndphillips.github.io"),
 #'  titles.right.cex = c(2, 2, 1),
@@ -62,8 +62,8 @@
 #'  trans = .6)
 
 
-Visual.Resume <- function(titles.left = c("Main Title", "Sub-title", "Sub-Sub-title"),
-                          titles.left.cex = c(3, 2, 1),
+VisualResume <- function(titles.left = c("Main Title", "Sub-title", "Sub-Sub-title"),
+                          titles.left.cex = c(4, 2, 1),
                           titles.right = c("www.a.com", "me@gmail.com", ""),
                           titles.right.cex = c(3, 2, 1),
                           center.labels = c("D", "E"),
@@ -80,49 +80,52 @@ Visual.Resume <- function(titles.left = c("Main Title", "Sub-title", "Sub-Sub-ti
                                                   date = c(2005.5, 2010.9, 2014.5)),
                           events = data.frame(year = c(2007, 2011.5, 2014.2),
                                               title = c("a", "b", "c")),
-                          events.cex = 1,
+                          events.cex = 1.5,
                           year.steps = 1,
                           interests = list("Programming" = c("R", "Javascript", "HTML"),
                                            "Statistics" = c("Bayesian", "Regression", "Decision\nTrees"),
                                            "Research" = c("Decision Making", "Foraging")
                                            ),
                           font.family = NA,
-                          col = "basel",
+                          col = "xmen",
                           trans = .6,
                           year.range = NULL
                           ) {
 #
 #
-  #  year.range <- NULL
-  # titles.left = c("Nathaniel D. Phillips (PhD)", "R, Data, and Decision Science", "*Built with love in R using the InfoResume package")
-  # titles.right = c("www.nathanieldphillips.com", "Nathaniel.D.Phillips.is@gmail.com", "")
-  # titles.right.cex = c(2, 2, 1)
-  # titles.left.cex = c(4, 2, 1)
-  # center.labels = c("Education", "Teaching")
-  # bottom.labels = c("Skills", "Links", "Milestones")
-  # top = data.frame(title = c("Grinnell College", "Ohio U", "U of Basel", "MPIB", "U of Konstanz", "U of Basel"),
-  #                  sub = c("BA. Student", "MS. Student", "PhD. Student", "PhD. Researcher", "PostDoc", "PostDoc"),
+  #   year.range <- NULL
+  # col = "xmen"
+  #  trans = .6
+  #  font.family <- NA
+  #
+  # titles.left = c("Title 1", "Title 2", "Title 3")
+  # titles.right = c("Title 1", "Title 2", "Title 3")
+  # center.labels = c("Label 1", "Label 2")
+  # top = data.frame(title = c("A", "B", "C", "D", "E", "F"),
+  #                  sub = c("a", "b", "c", "d", "e", "f"),
   #                  start = c(2001.5, 2006.5, 2011, 2012, 2014.7, 2016.1),
-  #                  end = c(2005.5, 2010.9, 2014.5, 2014.6, 2016, 2017))
-  # bottom = data.frame(title = c("Musician's Friend", "Statistics", "Research Methods", "Information Search", "R", "R", "R", "R"),
-  #                     sub = c("Statistician", "OhioU", "OhioU", "Konstanz", "Konstanz", "Konstanz", "Basel", "Basel"),
+  #                  end = c(2005.5, 2010.9, 2014.5, 2014.6, 2016, 2017),
+  #                  point.x = c(2002, 2007, 2011.2, 2015.5, 2015.5, 2016.3),
+  #                  point.y = rep(55, 6)
+  # )
+  # bottom = data.frame(title = c("G", "H", "I", "J", "K", "L", "M", "N"),
+  #                     sub = c("g", "h", "i", "j", "k", "l", "m", "n"),
   #                     start = c(2005.5, 2009.5, 2010, 2014.8, 2014.8, 2015.4, 2016.1, 2016.7),
-  #                     end = c(2006.5, 2010, 2011, 2015.3, 2015.3, 2015.9, 2016.6, 2017))
-  # milestones = data.frame(title = c("BA Math", "MS Psych", "Ph.D Psych"),
+  #                     end = c(2006.5, 2010, 2011, 2015.3, 2015.3, 2015.9, 2016.6, 2017),
+  #                     point.x = c(2005.5, 2009.5, 2010, 2014.8, 2014.8, 2015.4, 2016.1, 2016.7),
+  #                     point.y = rep(45, 8))
+  # milestones = data.frame(title = c("M1", "M2", "M3"),
   #                         subtitle = c("2005", "2010", "2014"),
   #                         date = c(2005.5, 2010.9, 2014.5))
   # events = data.frame(year = c(2016, 2015, 2014, 2013, 2012),
-  #                     title = c("Phillips (in prep). YaRrr! The Pirate's Guide to R.\nSelf-published e-book.",
-  #                               "Hintze et al. (2015). The Janus face of Darwinian competition.\nScientific Reports, 5.",
-  #                               "Phillips et al. (2014). Rivals in the Dark: How competition influences [...].\nCognition, 113(1), 104-119.",
-  #                               "Gonzalez-Vallejo et al. (2013). Early positive information impacts final [...].\nJournal of Behavioral Decision Making, 27.",
-  #                               "Gonzalez-Vallejo & Phillips, N. D. (2012). Predicting soccer matches [...].\nJudgment and Decision Making. 5(3). 200-206."))
-  # interests = list("programming" = c(rep("R", 10), rep("Python", 1), rep("JavaScript", 2), "MatLab", "asdf"),
-  #                  "statistics" = c(rep("Decision Trees", 10), rep("Bayesian", 5), rep("Regression", 3)),
-  #                  "research" = c(rep("Information Search", 10), rep("Decision Making", 5), rep("Statistical Reasoning", 3)))
-  # col = "xmen"
-  # trans = .6
-  # font.family <- NA
+  #                     title = c("EVENT 1",
+  #                               "EVENT 2",
+  #                               "EVENT 3",
+  #                               "EVENT 4",
+  #                               "EVENT 5"))
+  # interests = list("AREA1" = c(rep("A", 20), rep("B", 1), rep("C", 2), "D", "E"),
+  #                  "AREA2" = c(rep("A", 10), rep("B", 5), rep("C", 3), rep("D")),
+  #                  "AREA3" = c(rep("A", 10), rep("B", 5), rep("C", 3), rep("D", 6)))
 
 
 
@@ -288,27 +291,35 @@ layout(
 #  --------
 {
 
+  change.box.x0 <- FALSE
+  change.box.x1 <- FALSE
+  change.box.y0 <- FALSE
+  change.box.y1 <- FALSE
+
  if("box.x0" %in% names(combined) == FALSE) {
 
-   combined$box.x0 <- NA
-
+    combined$box.x0 <- NA
+   change.box.x0 <- TRUE
  }
 
  if("box.y0" %in% names(combined) == FALSE) {
 
    combined$box.y0 <- NA
+   change.box.y0 <- TRUE
 
  }
 
  if("box.x1" %in% names(combined) == FALSE) {
 
    combined$box.x1 <- NA
+   change.box.x1 <- TRUE
 
  }
 
  if("box.y1" %in% names(combined) == FALSE) {
 
    combined$box.y1 <- NA
+   change.box.y1 <- TRUE
 
  }
 
@@ -345,10 +356,10 @@ layout(
 
       box.y1 <- box.y1 + existing.boxes * switch(location.i, "top" = 4, "bottom" = -4)
 
-      combined$box.x0[i] <- box.x0
-      combined$box.x1[i] <- box.x1
-      combined$box.y0[i] <- box.y0
-      combined$box.y1[i] <- box.y1
+      if(change.box.x0) {combined$box.x0[i] <- box.x0}
+      if(change.box.x1) {combined$box.x1[i] <- box.x1}
+      if(change.box.y0) {combined$box.y0[i] <- box.y0}
+      if(change.box.y1) {combined$box.y1[i] <- box.y1}
 
     }
   }
@@ -361,15 +372,17 @@ layout(
 
  if("point.x" %in% names(combined) == FALSE) {
 
+   change.point.x <- TRUE
    combined$point.x <- NA
 
- }
+   }
 
- if("point.y" %in% names(combined) == FALSE) {
+  if("point.y" %in% names(combined) == FALSE) {
 
-   combined$point.y <- NA
+    change.point.y <- TRUE
+    combined$point.y <- NA
 
- }
+  }
 
   for (i in 1:nrow(combined)) {
 
@@ -411,20 +424,30 @@ layout(
 
       }
 
-      combined$point.x[i] <- point.x
-      combined$point.y[i] <- point.y
-
-
+      if(change.point.x) {combined$point.x[i] <- point.x}
+      if(change.point.y) {combined$point.y[i] <- point.y}
 
   }
-}
+
+ }
+
+  }
 
 #  -------
 # LABEL COORDINATES
 #  --------
  {
+
+   change.label.dir <- FALSE
+   change.text.adj <- FALSE
+   change.elbow <- FALSE
+   change.label.x <- FALSE
+   change.label.y <- FALSE
+
+
  if("label.dir" %in% names(combined) == FALSE) {
 
+   change.label.dir <- TRUE
    combined$label.dir <- NA
 
  }
@@ -432,25 +455,28 @@ layout(
  if("text.adj" %in% names(combined) == FALSE) {
 
    combined$text.adj <- NA
+   change.text.adj <- TRUE
 
  }
 
  if("elbow" %in% names(combined) == FALSE) {
 
    combined$elbow <- NA
-
+   change.elbow <- TRUE
  }
 
 
  if("label.x" %in% names(combined) == FALSE) {
 
    combined$label.x <- NA
+   change.label.x <- TRUE
 
  }
 
  if("label.y" %in% names(combined) == FALSE) {
 
    combined$label.x <- NA
+   change.label.y <- TRUE
 
  }
 
@@ -648,12 +674,11 @@ if(is.na(combined$label.x[i])) {
   }
 
     # Write values
-
-    combined$label.y[i] <- label.y
-    combined$label.x[i] <- label.x
-    combined$label.dir[i] <- label.dir
-    combined$text.adj[i] <- text.adj
-    combined$elbow[i] <- elbow
+    if(change.label.y) {combined$label.y[i] <- label.y}
+    if(change.label.x) {combined$label.x[i] <- label.x}
+    if(change.label.dir) {combined$label.dir[i] <- label.dir}
+    if(change.text.adj) {combined$text.adj[i] <- text.adj}
+    if(change.elbow) {combined$elbow[i] <- elbow}
 
   }
  }
@@ -747,8 +772,6 @@ if(is.na(combined$label.x[i])) {
 
   points(events$year, rep(60, length(events$year)), pch = 23, col = "black", bg = "white", cex = 4)
   text(events$year, rep(60, length(events$year)), 1:length(events$year), cex = 1.5, family = font.family)
-
-}
 
 # ----------------
 # Bottom Row
