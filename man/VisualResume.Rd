@@ -14,10 +14,11 @@ VisualResume(titles.left = c("Main Title", "Sub-title", "Sub-Sub-title"),
   = c(2010.5, 2015.2, 2015.2)), milestones = data.frame(title = c("BA", "MS",
   "Ph.D"), subtitle = c("2005", "2010", "2014"), date = c(2005.5, 2010.9,
   2014.5)), events = data.frame(year = c(2007, 2011.5, 2014.2), title = c("a",
-  "b", "c")), events.cex = 1, year.steps = 1, interests = list(Programming
-  = c("R", "Javascript", "HTML"), Statistics = c("Bayesian", "Regression",
-  "Decision\\nTrees"), Research = c("Decision Making", "Foraging")),
-  font.family = NA, col = "basel", trans = 0.6, year.range = NULL)
+  "b", "c")), events.cex = 1.5, year.steps = 1,
+  interests = list(Programming = c("R", "Javascript", "HTML"), Statistics =
+  c("Bayesian", "Regression", "Decision\\nTrees"), Research =
+  c("Decision Making", "Foraging")), font.family = NA, col = "xmen",
+  trans = 0.6, year.range = NULL)
 }
 \arguments{
 \item{titles.left, titles.right}{character. Vector of up to length three indicating labels to be shown in the top left / right.}

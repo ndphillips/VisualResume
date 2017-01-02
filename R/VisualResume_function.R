@@ -113,7 +113,7 @@ VisualResume <- function(titles.left = c("Main Title", "Sub-title", "Sub-Sub-tit
   #                     start = c(2005.5, 2009.5, 2010, 2014.8, 2014.8, 2015.4, 2016.1, 2016.7),
   #                     end = c(2006.5, 2010, 2011, 2015.3, 2015.3, 2015.9, 2016.6, 2017),
   #                     point.x = c(2005.5, 2009.5, 2010, 2014.8, 2014.8, 2015.4, 2016.1, 2016.7),
-  #                     point.y = rep(45, 8))
+  #                     point.y = rep(40, 8))
   # milestones = data.frame(title = c("M1", "M2", "M3"),
   #                         subtitle = c("2005", "2010", "2014"),
   #                         date = c(2005.5, 2010.9, 2014.5))
@@ -434,7 +434,6 @@ layout(
 
  }
 
-  }
 
 #  -------
 # LABEL COORDINATES
@@ -775,6 +774,8 @@ if(is.na(combined$label.x[i])) {
 
   points(events$year, rep(60, length(events$year)), pch = 23, col = "black", bg = "white", cex = 4)
   text(events$year, rep(60, length(events$year)), 1:length(events$year), cex = 1.5, family = font.family)
+
+}
 
 # ----------------
 # Bottom Row
