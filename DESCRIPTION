@@ -1,0 +1,12 @@
+Package: VisualResume
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+License: GPL-2
+Author: Nathaniel D. Phillips
+Maintainer: Nathaniel D. Phillips <Nathaniel.D.Phillips.is@gmail.com>
+Description: Creates a visual resume
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 5.0.1
+Depends: yarrr, showtext, sysfonts
