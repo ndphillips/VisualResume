@@ -370,6 +370,9 @@ layout(
 #  --------
 {
 
+  change.point.x <- FALSE
+  change.point.y <- FALSE
+
  if("point.x" %in% names(combined) == FALSE) {
 
    change.point.x <- TRUE
