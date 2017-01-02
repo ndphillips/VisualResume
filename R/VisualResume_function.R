@@ -91,7 +91,9 @@ VisualResume <- function(titles.left = c("Main Title", "Sub-title", "Sub-Sub-tit
                           trans = .6,
                           year.range = NULL
                           ) {
-#
+
+  # SEE MEE
+  #
 #
   #   year.range <- NULL
   # col = "xmen"
