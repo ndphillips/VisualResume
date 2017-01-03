@@ -2,7 +2,7 @@
 #'
 #' @param titles.left,titles.right character. Vector of up to length three indicating labels to be shown in the top left / right.
 #' @param titles.left.cex,titles.right.cex numeric. Vector indicating the size of the respective labels.
-#' @param center.labels character. Vector of two labels for the top and bottom sections of the timeline.
+#' @param timeline.labels character. Vector of two labels for the top and bottom sections of the timeline.
 #' @param timeline dataframe. Specifications of the elements in the timeline. See Details
 #' @param milestones dataframe. Specifications of brief level-1 timeline milestones (at top of timeline). Should contain the columns \code{year} (integer) and \code{title} (character)
 #' @param events dataframe. Specificaions of longer level-2 milestones (in bottom right plot). Should contain the columns \code{year} (integer) and \code{title} (character)
@@ -43,7 +43,7 @@
 #'titles.right = c("www.lospolloshermanos.com", "TheOneWhoKnocks@gmail.com", "Full Resume: www.ndphillips.github.io"),
 #'titles.right.cex = c(2, 2, 1),
 #'titles.left.cex = c(4, 2, 1),
-#'center.labels = c("Education", "Teaching"),
+#'timeline.labels = c("Education", "Teaching"),
 #'timeline = data.frame(title = c("Grinnell Col", "Ohio U", "U of Basel", "Max Planck Institute", "Old Van", "Gray Matter", "Sandia Laboratories", "J.P. Wynne High School", "A1A Car Wash"),
 #'                      sub = c("BA. Student", "MS. Student", "PhD. Student", "PhD. Researcher", "Methamphetamine Research", "Co-Founder", "Chemist", "Chemistry Teacher", "Co-Owner"),
 #'                      start = c(1976, 1980.1, 1982.2, 1985, 1996.5, 1987, 1991, 1995, 2001),
@@ -69,7 +69,7 @@ VisualResume <- function(titles.left = c("Main Title", "Sub-title", "Sub-Sub-tit
                           titles.left.cex = c(4, 2, 1),
                           titles.right = c("www.a.com", "me@gmail.com", ""),
                           titles.right.cex = c(3, 2, 1),
-                          center.labels = c("D", "E"),
+                          timeline.labels = c("D", "E"),
                           timeline = data.frame(title = c("College A", "University B", "University C", "Project A", "Project B", "Project C"),
                                                 sub = c("a", "b", "c", "a", "b", "c"),
                                                 start = c(2001.5, 2006.5, 2011, 2010, 2014.6, 2014.6),
@@ -101,7 +101,7 @@ VisualResume <- function(titles.left = c("Main Title", "Sub-title", "Sub-Sub-tit
 #   titles.right = c("www.lospolloshermanos.com", "TheOneWhoKnocks@gmail.com", "Full Resume: www.ndphillips.github.io")
 #   titles.right.cex = c(2, 2, 1)
 #   titles.left.cex = c(4, 2, 1)
-#   center.labels = c("Education", "Teaching")
+#   timeline.labels = c("Education", "Teaching")
 #   timeline = data.frame(title = c("Grinnell Col", "Ohio U", "U of Basel", "MPIB", "Old Van", "Gray Matter", "Sandia Laboratories", "J.P. Wynne High School", "A1A Car Wash"),
 #                         sub = c("BA. Student", "MS. Student", "PhD. Student", "PhD. Researcher", "Methamphetamine Research", "Co-Founder", "Chemist", "Chemistry Teacher", "Co-Owner"),
 #                         start = c(1976, 1980, 1982, 1985, 1996.5, 1987, 1991, 1995, 2001),
@@ -132,8 +132,8 @@ for(i in 1:ncol(timeline)) {if(class(timeline[,i]) == "factor") {timeline[,i] <-
 
 # Extract some parameters
 events.selected <- 1:nrow(events)
-top.graph.label <- center.labels[1]
-bottom.graph.label <- center.labels[2]
+top.graph.label <- timeline.labels[1]
+bottom.graph.label <- timeline.labels[2]
 
 ## Colors and Fonts
 {
