@@ -180,7 +180,19 @@ year.range <- c(floor(min(timeline$start)),
 
 year.min <- min(year.range)
 year.max <- max(year.range)
-year.seq <- seq(year.min, year.max, by = year.steps)
+
+
+year.seq <- seq(min(year.range), max(year.range), by = year.steps)
+
+if(max(year.seq) != year.max) {
+
+  year.seq <- c(year.seq, max(year.seq) + year.steps)
+
+  year.min <- min(year.seq)
+  year.max <- max(year.seq)
+
+}
+
 }
 
 # Plot Layout
