@@ -2,23 +2,23 @@
 % Please edit documentation in R/VisualResume_function.R
 \name{VisualResume}
 \alias{VisualResume}
-\title{Creates a visual resume}
+\title{Creates a visual resume from dataframes specifying important events (e.g.; jobs or education) and interests / skills. The plot is optimized for an 8.5 in x 11 in display.}
 \usage{
 VisualResume(titles.left = c("Main Title", "Sub-title", "Sub-Sub-title"),
   titles.left.cex = c(4, 2, 1), titles.right = c("www.a.com",
   "me@gmail.com", ""), titles.right.cex = c(3, 2, 1), center.labels = c("D",
-  "E"), top = data.frame(title = c("College A", "University B",
-  "University C"), sub = c("a"), start = c(2001.5, 2006.5, 2011), end =
-  c(2005.5, 2010.9, 2014.5)), bottom = data.frame(title = c("Project A",
-  "Project B", "Project C"), sub = c("b"), start = c(2010, 2014.6, 2014.6), end
-  = c(2010.5, 2015.2, 2015.2)), milestones = data.frame(title = c("BA", "MS",
-  "Ph.D"), subtitle = c("2005", "2010", "2014"), date = c(2005.5, 2010.9,
-  2014.5)), events = data.frame(year = c(2007, 2011.5, 2014.2), title = c("a",
-  "b", "c")), events.cex = 1.5, year.steps = 1,
-  interests = list(Programming = c("R", "Javascript", "HTML"), Statistics =
-  c("Bayesian", "Regression", "Decision\\nTrees"), Research =
-  c("Decision Making", "Foraging")), font.family = NA, col = "xmen",
-  trans = 0.6, year.range = NULL)
+  "E"), timeline = data.frame(title = c("College A", "University B",
+  "University C", "Project A", "Project B", "Project C"), sub = c("a", "b", "c",
+  "a", "b", "c"), start = c(2001.5, 2006.5, 2011, 2010, 2014.6, 2014.6), end =
+  c(2005.5, 2010.9, 2014.5, 2010.5, 2015.2, 2015.2), side = c(1, 1, 1, 0, 0,
+  0)), milestones = data.frame(title = c("BA", "MS", "Ph.D"), sub = c("2005",
+  "2010", "2014"), year = c(2005.5, 2010.9, 2014.5)),
+  events = data.frame(title = c("a", "b", "c"), year = c(2007, 2011.5,
+  2014.2)), events.cex = 1.5, interests = list(Programming = c("R",
+  "Javascript", "HTML"), Statistics = c("Bayesian", "Regression",
+  "Decision\\nTrees"), Research = c("Decision Making", "Foraging")),
+  font.family = NA, col = "xmen", trans = 0.6, year.steps = 1,
+  year.range = NULL)
 }
 \arguments{
 \item{titles.left, titles.right}{character. Vector of up to length three indicating labels to be shown in the top left / right.}
@@ -27,17 +27,13 @@ VisualResume(titles.left = c("Main Title", "Sub-title", "Sub-Sub-title"),
 
 \item{center.labels}{character. Vector of two labels for the top and bottom sections of the timeline.}
 
-\item{top}{dataframe. Specifications of the top section of the timeline.}
+\item{timeline}{dataframe. Specifications of the elements in the timeline. See Details}
 
-\item{bottom}{dataframe. Specificaions of the bottom section of the timeline.}
+\item{milestones}{dataframe. Specifications of brief level-1 timeline milestones (at top of timeline). Should contain the columns \code{year} (integer) and \code{title} (character)}
 
-\item{milestones}{dataframe. Specifications of brief level-1 timeline milestones (at top of timeline).}
+\item{events}{dataframe. Specificaions of longer level-2 milestones (in bottom right plot). Should contain the columns \code{year} (integer) and \code{title} (character)}
 
-\item{events}{dataframe. Specificaions of longer level-2 milestones (in bottom right plot).}
-
-\item{events.cex}{numeric. A size multiplier for level-2 milestones}
-
-\item{year.steps}{integer.}
+\item{events.cex}{numeric. A size multiplier for level-2 milestones.}
 
 \item{interests}{list. A list of length up to 4 indicating one's interests / skills. Each entry should be a character vector up to length 5. The more often a value occurs in the vector, the more pronounced it will be.}
 
@@ -45,49 +41,59 @@ VisualResume(titles.left = c("Main Title", "Sub-title", "Sub-Sub-title"),
 
 \item{col}{character. The color palette for the plot. Can be a named palette from the \code{yarrr::piratepal()} function (e.g.; \code{"basel"} or \code{"xmen"}), or a vector of named colors.}
 
-\item{trans}{numeric. A number between 0 and 1 indicating the transparencies of the colors}
+\item{trans}{numeric. A number between 0 and 1 indicating the transparencies of the colors of boxes in the timeline.}
 
-\item{year.range}{integer. An optional vector of minimum and maximum years to plot in the timeline.}
+\item{year.steps}{integer. The step size in years of the year labels in the timeline.}
+
+\item{year.range}{integer. A vector of minimum and maximum years to plot in the timeline.}
 }
 \description{
-This function takes several arguments and returns a visual resume plot. The plot is optimized for an 8.5 in x 11 in display.
+Creates a visual resume from dataframes specifying important events (e.g.; jobs or education) and interests / skills. The plot is optimized for an 8.5 in x 11 in display.
 }
 \details{
-The middle, timeline in the plot is plotted with y values ranging from 0 to 100.
- The arguments \code{top} and \code{bottom}, specifying events in the bottom and top of the timeline should each be a dataframe with at least the columns title, sub, start, and end. To specify plotting locations explicitly, you can include the columns \code{box.x0, box.x1, box.y0, box.y1} for the box locations and/or \code{label.x, label.y, label.dir} for the label coordinates and direction ("left" or "right")
+The argument \code{timeline} specifying events in the timeline should each be a dataframe with at least the following columns:
+\describe{
+ \item{title, sub}{character. Titles and subs}
+ \item{start, end}{integer. Start and end years}
+ \item{side}{binary. Vertical location of the event. 1 = top, 0 = bottom.}
+ }
+ If you want to adjust the locations of elements, you can specify the locations of timeline elements explicitly with additional named columns.
+ \describe{
+ \item{box.x0, box.x1, box.y0, box.y1}{numeric. Coordinates of the boxes.}
+ \item{point.x, point.y}{numeric. Coordinates of the points.}
+ \item{label.x, label.y}{numeric. Coordinates of the labels.}
+ \item{label.dir}{string. Directions of the labels. Either "left" or "right".}
+ }
+ Note that the vertical axis of the timeline ranges from 0 (the bottom) to 100 (the top).
 }
 \examples{
 
+# Walter White's visual resume
 
 VisualResume(
- titles.left = c("Walter White, PhD", "Chemistry, Cooking, Pizza", "*Built with love in R using the InfoResume package: www.ndphillips.github.io/inforesume"),
- titles.right = c("www.lospolloshermanos.com", "TheOneWhoKnocks@gmail.com", "Full Resume: www.ndphillips.github.io"),
- titles.right.cex = c(2, 2, 1),
- titles.left.cex = c(4, 2, 1),
- center.labels = c("Education", "Teaching"),
- top = data.frame(title = c("Grinnell College", "Ohio U", "U of Basel", "MPIB", "U of Konstanz", "U of Basel"),
-                  sub = c("BA. Student", "MS. Student", "PhD. Student", "PhD. Researcher", "PostDoc", "PostDoc"),
-                  start = c(1976, 1980, 1982, 2012, 2014.7, 2016.1),
-                  end = c(1980, 1982, 1985, 2014.6, 2016, 2017)),
- bottom = data.frame(title = c("Musician's Friend", "Statistics", "Research Methods", "Information Search", "R", "R", "R", "R"),
-                     sub = c("Statistician", "OhioU", "OhioU", "Konstanz", "Konstanz", "Konstanz", "Basel", "Basel"),
-                     start = c(2005.5, 2009.5, 2010, 2014.8, 2014.8, 2015.4, 2016.1, 2016.7),
-                     end = c(2006.5, 2010, 2011, 2015.3, 2015.3, 2015.9, 2016.6, 2017)),
- milestones = data.frame(title = c("BA Mathematics", "MS Chemistry", "Ph.D Chemistry"),
-                         subtitle = c("2005", "2010", "2014"),
-                         date = c(2005.5, 2010.9, 2014.5)),
- events = data.frame(year = c(2016, 2015, 2014, 2013, 2012),
-                     title = c("White, W. (2016). YaRrr! The Pirate's Guide to R.\\nSelf-published e-book.",
-                               "White, W. & Pinkman, J. (2015). The Janus face of Darwinian competition.\\nScientific Reports, 5.",
-                               "White, W. & Pinkman, J. (2014). Rivals in the Dark: How competition influences [...].\\nCognition, 113(1), 104-119.",
-                               "White, W. & Pinkman, J. (2013). Early positive information impacts final [...].\\nJournal of Behavioral Decision Making, 27.",
-                               "White, W. & Pinkman, J. (2012). Predicting soccer matches [...].\\nJudgment and Decision Making. 5(3). 200-206.")),
- interests = list("programming" = c(rep("R", 10), rep("Python", 1), rep("JavaScript", 2), "MatLab"),
-                  "statistics" = c(rep("Decision Trees", 10), rep("Bayesian", 5), rep("Regression", 3)),
-                  "research" = c(rep("Information Search", 10), rep("Decision Making", 5), rep("Statistical Reasoning", 3))
-                  #            "test2" = c(rep("AAA", 10), rep("BBB", 50), rep("CCC", 3))
- ),
- col = "xmen",
- trans = .6)
+titles.left = c("Walter White, PhD", "Chemistry, Cooking, Pizza", "*Built with love in R using the InfoResume package: www.ndphillips.github.io/inforesume"),
+titles.right = c("www.lospolloshermanos.com", "TheOneWhoKnocks@gmail.com", "Full Resume: www.ndphillips.github.io"),
+titles.right.cex = c(2, 2, 1),
+titles.left.cex = c(4, 2, 1),
+center.labels = c("Education", "Teaching"),
+timeline = data.frame(title = c("Grinnell Col", "Ohio U", "U of Basel", "Max Planck Institute", "Old Van", "Gray Matter", "Sandia Laboratories", "J.P. Wynne High School", "A1A Car Wash"),
+                     sub = c("BA. Student", "MS. Student", "PhD. Student", "PhD. Researcher", "Methamphetamine Research", "Co-Founder", "Chemist", "Chemistry Teacher", "Co-Owner"),
+                     start = c(1976, 1980, 1982, 1985, 1996.5, 1987, 1991, 1995, 2001),
+                     end = c(1980, 1982, 1985, 1987, 1998, 1992, 1995, 1998, 2003),
+                     side = c(1, 1, 1, 1, 1, 0, 0, 0, 0)),
+milestones = data.frame(title = c("BA", "MS", "PhD"),
+                       sub = c("Mathematics", "Chemistry", "Chemistry"),
+                       year = c(1980, 1982, 1985)),
+events = data.frame(year = c(1985, 1995, 1997, 1999, 2012),
+                   title = c("Contributed to Nobel Prize winning experiment.",
+                             "Honorary mention for best Chemistry teacher of the year.",
+                             "Created Blue Sky, the most potent methamphetamine ever produced.",
+                             "Made first $1,000,000.",
+                             "White, W., & Pinkman, J. (2012). Blue Sky: A method of [...].\\nJournal of Psychopharmical Substances, 1(1),.")),
+interests = list("programming" = c(rep("R", 10), rep("Python", 1), rep("JavaScript", 2), "MatLab"),
+                "statistics" = c(rep("Decision Trees", 10), rep("Bayesian", 5), rep("Regression", 3)),
+                "leadership" = c(rep("Motivation", 10), rep("Decision Making", 5), rep("Manipulation", 30))),
+year.steps = 2)
+
 }
 

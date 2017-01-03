@@ -1,21 +1,18 @@
-#' Creates a visual resume
-#'
-#' This function takes several arguments and returns a visual resume plot. The plot is optimized for an 8.5 in x 11 in display.
+#' Creates a visual resume from dataframes specifying important events (e.g.; jobs or education) and interests / skills. The plot is optimized for an 8.5 in x 11 in display.
 #'
 #' @param titles.left,titles.right character. Vector of up to length three indicating labels to be shown in the top left / right.
 #' @param titles.left.cex,titles.right.cex numeric. Vector indicating the size of the respective labels.
 #' @param center.labels character. Vector of two labels for the top and bottom sections of the timeline.
-#' @param top dataframe. Specifications of the top section of the timeline.
-#' @param bottom dataframe. Specificaions of the bottom section of the timeline.
-#' @param milestones dataframe. Specifications of brief level-1 timeline milestones (at top of timeline).
-#' @param events dataframe. Specificaions of longer level-2 milestones (in bottom right plot).
+#' @param timeline dataframe. Specifications of the elements in the timeline. See Details
+#' @param milestones dataframe. Specifications of brief level-1 timeline milestones (at top of timeline). Should contain the columns \code{year} (integer) and \code{title} (character)
+#' @param events dataframe. Specificaions of longer level-2 milestones (in bottom right plot). Should contain the columns \code{year} (integer) and \code{title} (character)
 #' @param interests list. A list of length up to 4 indicating one's interests / skills. Each entry should be a character vector up to length 5. The more often a value occurs in the vector, the more pronounced it will be.
 #' @param font.family character. An optional google font family. Run \code{sysfonts::font.families.google()} to see all of them. Only use when creating plot in a plotting device such as pdf()
 #' @param col character. The color palette for the plot. Can be a named palette from the \code{yarrr::piratepal()} function (e.g.; \code{"basel"} or \code{"xmen"}), or a vector of named colors.
-#' @param trans numeric. A number between 0 and 1 indicating the transparencies of the colors
-#' @param events.cex numeric. A size multiplier for level-2 milestones
-#' @param year.steps integer.
-#' @param year.range integer. An optional vector of minimum and maximum years to plot in the timeline.
+#' @param trans numeric. A number between 0 and 1 indicating the transparencies of the colors of boxes in the timeline.
+#' @param events.cex numeric. A size multiplier for level-2 milestones.
+#' @param year.steps integer. The step size in years of the year labels in the timeline.
+#' @param year.range integer. A vector of minimum and maximum years to plot in the timeline.
 #' @importFrom grDevices rgb col2rgb gray
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot plot.new plot.window
 #' @importFrom yarrr piratepal
@@ -23,43 +20,49 @@
 #' @importFrom sysfonts font.add.google font.families.google
 #' @export
 #' @details
-#'
-#'  The middle, timeline in the plot is plotted with y values ranging from 0 to 100.
-#'  The arguments \code{top} and \code{bottom}, specifying events in the bottom and top of the timeline should each be a dataframe with at least the columns title, sub, start, and end. To specify plotting locations explicitly, you can include the columns \code{box.x0, box.x1, box.y0, box.y1} for the box locations and/or \code{label.x, label.y, label.dir} for the label coordinates and direction ("left" or "right")
-#'
+#'  The argument \code{timeline} specifying events in the timeline should each be a dataframe with at least the following columns:
+#' \describe{
+#'  \item{title, sub}{character. Titles and subs}
+#'  \item{start, end}{integer. Start and end years}
+#'  \item{side}{binary. Vertical location of the event. 1 = top, 0 = bottom.}
+#'  }
+#'  If you want to adjust the locations of elements, you can specify the locations of timeline elements explicitly with additional named columns.
+#'  \describe{
+#'  \item{box.x0, box.x1, box.y0, box.y1}{numeric. Coordinates of the boxes.}
+#'  \item{point.x, point.y}{numeric. Coordinates of the points.}
+#'  \item{label.x, label.y}{numeric. Coordinates of the labels.}
+#'  \item{label.dir}{string. Directions of the labels. Either "left" or "right".}
+#'  }
+#'  Note that the vertical axis of the timeline ranges from 0 (the bottom) to 100 (the top).
 #' @examples
 #'
+#' # Walter White's visual resume
 #'
 #'VisualResume(
-#'  titles.left = c("Walter White, PhD", "Chemistry, Cooking, Pizza", "*Built with love in R using the InfoResume package: www.ndphillips.github.io/inforesume"),
-#'  titles.right = c("www.lospolloshermanos.com", "TheOneWhoKnocks@gmail.com", "Full Resume: www.ndphillips.github.io"),
-#'  titles.right.cex = c(2, 2, 1),
-#'  titles.left.cex = c(4, 2, 1),
-#'  center.labels = c("Education", "Teaching"),
-#'  top = data.frame(title = c("Grinnell College", "Ohio U", "U of Basel", "MPIB", "U of Konstanz", "U of Basel"),
-#'                   sub = c("BA. Student", "MS. Student", "PhD. Student", "PhD. Researcher", "PostDoc", "PostDoc"),
-#'                   start = c(1976, 1980, 1982, 2012, 2014.7, 2016.1),
-#'                   end = c(1980, 1982, 1985, 2014.6, 2016, 2017)),
-#'  bottom = data.frame(title = c("Musician's Friend", "Statistics", "Research Methods", "Information Search", "R", "R", "R", "R"),
-#'                      sub = c("Statistician", "OhioU", "OhioU", "Konstanz", "Konstanz", "Konstanz", "Basel", "Basel"),
-#'                      start = c(2005.5, 2009.5, 2010, 2014.8, 2014.8, 2015.4, 2016.1, 2016.7),
-#'                      end = c(2006.5, 2010, 2011, 2015.3, 2015.3, 2015.9, 2016.6, 2017)),
-#'  milestones = data.frame(title = c("BA Mathematics", "MS Chemistry", "Ph.D Chemistry"),
-#'                          subtitle = c("2005", "2010", "2014"),
-#'                          date = c(2005.5, 2010.9, 2014.5)),
-#'  events = data.frame(year = c(2016, 2015, 2014, 2013, 2012),
-#'                      title = c("White, W. (2016). YaRrr! The Pirate's Guide to R.\nSelf-published e-book.",
-#'                                "White, W. & Pinkman, J. (2015). The Janus face of Darwinian competition.\nScientific Reports, 5.",
-#'                                "White, W. & Pinkman, J. (2014). Rivals in the Dark: How competition influences [...].\nCognition, 113(1), 104-119.",
-#'                                "White, W. & Pinkman, J. (2013). Early positive information impacts final [...].\nJournal of Behavioral Decision Making, 27.",
-#'                                "White, W. & Pinkman, J. (2012). Predicting soccer matches [...].\nJudgment and Decision Making. 5(3). 200-206.")),
-#'  interests = list("programming" = c(rep("R", 10), rep("Python", 1), rep("JavaScript", 2), "MatLab"),
-#'                   "statistics" = c(rep("Decision Trees", 10), rep("Bayesian", 5), rep("Regression", 3)),
-#'                   "research" = c(rep("Information Search", 10), rep("Decision Making", 5), rep("Statistical Reasoning", 3))
-#'                   #            "test2" = c(rep("AAA", 10), rep("BBB", 50), rep("CCC", 3))
-#'  ),
-#'  col = "xmen",
-#'  trans = .6)
+#'titles.left = c("Walter White, PhD", "Chemistry, Cooking, Pizza", "*Built with love in R using the InfoResume package: www.ndphillips.github.io/inforesume"),
+#'titles.right = c("www.lospolloshermanos.com", "TheOneWhoKnocks@gmail.com", "Full Resume: www.ndphillips.github.io"),
+#'titles.right.cex = c(2, 2, 1),
+#'titles.left.cex = c(4, 2, 1),
+#'center.labels = c("Education", "Teaching"),
+#'timeline = data.frame(title = c("Grinnell Col", "Ohio U", "U of Basel", "Max Planck Institute", "Old Van", "Gray Matter", "Sandia Laboratories", "J.P. Wynne High School", "A1A Car Wash"),
+#'                      sub = c("BA. Student", "MS. Student", "PhD. Student", "PhD. Researcher", "Methamphetamine Research", "Co-Founder", "Chemist", "Chemistry Teacher", "Co-Owner"),
+#'                      start = c(1976, 1980.1, 1982.2, 1985, 1996.5, 1987, 1991, 1995, 2001),
+#'                      end = c(1980, 1982, 1985, 1987, 1998, 1992, 1995, 1998, 2003),
+#'                      side = c(1, 1, 1, 1, 1, 0, 0, 0, 0)),
+#'milestones = data.frame(title = c("BA", "MS", "PhD"),
+#'                        sub = c("Mathematics", "Chemistry", "Chemistry"),
+#'                        year = c(1980, 1982, 1985)),
+#'events = data.frame(year = c(1985, 1995, 1997, 1999, 2012),
+#'                    title = c("Contributed to Nobel Prize winning experiment.",
+#'                              "Honorary mention for best Chemistry teacher of the year.",
+#'                              "Created Blue Sky, the most potent methamphetamine ever produced.",
+#'                              "Made first $1,000,000.",
+#'                              "White, W., & Pinkman, J. (2012). Blue Sky: A method of [...].\nJournal of Psychopharmical Substances, 1(1),.")),
+#'interests = list("programming" = c(rep("R", 10), rep("Python", 1), rep("JavaScript", 2), "MatLab"),
+#'                 "statistics" = c(rep("Decision Trees", 10), rep("Bayesian", 5), rep("Regression", 3)),
+#'                 "leadership" = c(rep("Motivation", 10), rep("Decision Making", 5), rep("Manipulation", 30))),
+#'year.steps = 2)
+#'
 
 
 VisualResume <- function(titles.left = c("Main Title", "Sub-title", "Sub-Sub-title"),
@@ -67,21 +70,17 @@ VisualResume <- function(titles.left = c("Main Title", "Sub-title", "Sub-Sub-tit
                           titles.right = c("www.a.com", "me@gmail.com", ""),
                           titles.right.cex = c(3, 2, 1),
                           center.labels = c("D", "E"),
-                          top = data.frame("title" = c("College A", "University B", "University C"),
-                                           "sub" = c("a"),
-                                           "start" = c(2001.5, 2006.5, 2011),
-                                           "end" = c(2005.5, 2010.9, 2014.5)),
-                          bottom = data.frame(title = c("Project A", "Project B", "Project C"),
-                                              "sub" = c("b"),
-                                              start = c(2010, 2014.6, 2014.6),
-                                              end = c(2010.5, 2015.2, 2015.2)),
+                          timeline = data.frame(title = c("College A", "University B", "University C", "Project A", "Project B", "Project C"),
+                                                sub = c("a", "b", "c", "a", "b", "c"),
+                                                start = c(2001.5, 2006.5, 2011, 2010, 2014.6, 2014.6),
+                                                end = c(2005.5, 2010.9, 2014.5, 2010.5, 2015.2, 2015.2),
+                                                side = c(1, 1, 1, 0, 0, 0)),
                           milestones = data.frame(title = c("BA", "MS", "Ph.D"),
-                                                  subtitle = c("2005", "2010", "2014"),
-                                                  date = c(2005.5, 2010.9, 2014.5)),
-                          events = data.frame(year = c(2007, 2011.5, 2014.2),
-                                              title = c("a", "b", "c")),
+                                                  sub = c("2005", "2010", "2014"),
+                                                  year = c(2005.5, 2010.9, 2014.5)),
+                          events = data.frame(title = c("a", "b", "c"),
+                                              year = c(2007, 2011.5, 2014.2)),
                           events.cex = 1.5,
-                          year.steps = 1,
                           interests = list("Programming" = c("R", "Javascript", "HTML"),
                                            "Statistics" = c("Bayesian", "Regression", "Decision\nTrees"),
                                            "Research" = c("Decision Making", "Foraging")
@@ -89,62 +88,47 @@ VisualResume <- function(titles.left = c("Main Title", "Sub-title", "Sub-Sub-tit
                           font.family = NA,
                           col = "xmen",
                           trans = .6,
+                          year.steps = 1,
                           year.range = NULL
                           ) {
 
-  # SEE MEE
-  #
-#
-  #   year.range <- NULL
-  # col = "xmen"
-  #  trans = .6
-  #  font.family <- NA
-  #
-  # titles.left = c("Title 1", "Title 2", "Title 3")
-  # titles.right = c("Title 1", "Title 2", "Title 3")
-  # center.labels = c("Label 1", "Label 2")
-  # top = data.frame(title = c("A", "B", "C", "D", "E", "F"),
-  #                  sub = c("a", "b", "c", "d", "e", "f"),
-  #                  start = c(2001.5, 2006.5, 2011, 2012, 2014.7, 2016.1),
-  #                  end = c(2005.5, 2010.9, 2014.5, 2014.6, 2016, 2017),
-  #                  point.x = c(2001, 2007, 2011.2, 2015.5, 2015.5, 2016.3)
-  # )
-  # bottom = data.frame(title = c("G", "H", "I", "J", "K", "L", "M", "N"),
-  #                     sub = c("g", "h", "i", "j", "k", "l", "m", "n"),
-  #                     start = c(2005.5, 2009.5, 2010, 2014.8, 2014.8, 2015.4, 2016.1, 2016.7),
-  #                     end = c(2006.5, 2010, 2011, 2015.3, 2015.3, 2015.9, 2016.6, 2017),
-  #                     point.x = c(2005.5, 2009.5, 2010, 2014.8, 2014.8, 2015.4, 2016.1, 2016.7))
-  #
-  # milestones = data.frame(title = c("M1", "M2", "M3"),
-  #                         subtitle = c("2005", "2010", "2014"),
-  #                         date = c(2005.5, 2010.9, 2014.5))
-  # events = data.frame(year = c(2016, 2015, 2014, 2013, 2012),
-  #                     title = c("EVENT 1",
-  #                               "EVENT 2",
-  #                               "EVENT 3",
-  #                               "EVENT 4",
-  #                               "EVENT 5"))
-  # interests = list("AREA1" = c(rep("A", 20), rep("B", 1), rep("C", 2), "D", "E"),
-  #                  "AREA2" = c(rep("A", 10), rep("B", 5), rep("C", 3), rep("D")),
-  #                  "AREA3" = c(rep("A", 10), rep("B", 5), rep("C", 3), rep("D", 6)))
 
-
-
-
-if(is.null(year.range)) {
-year.range <- c(floor(min(c(top$start, bottom$start))),
-                ceiling(max(c(top$end, bottom$end))))
-
-year.min <- min(year.range)
-year.max <- max(year.range)
-year.seq <- seq(year.min, year.max, by = year.steps)
-}
+  # TEST VALUES
+# year.range <- NULL
+# year.steps <- 1
+# font.family <- NA
+#   titles.left = c("Walter White, PhD", "Chemistry, Cooking, Pizza", "*Built with love in R using the InfoResume package: www.ndphillips.github.io/inforesume")
+#   titles.right = c("www.lospolloshermanos.com", "TheOneWhoKnocks@gmail.com", "Full Resume: www.ndphillips.github.io")
+#   titles.right.cex = c(2, 2, 1)
+#   titles.left.cex = c(4, 2, 1)
+#   center.labels = c("Education", "Teaching")
+#   timeline = data.frame(title = c("Grinnell Col", "Ohio U", "U of Basel", "MPIB", "Old Van", "Gray Matter", "Sandia Laboratories", "J.P. Wynne High School", "A1A Car Wash"),
+#                         sub = c("BA. Student", "MS. Student", "PhD. Student", "PhD. Researcher", "Methamphetamine Research", "Co-Founder", "Chemist", "Chemistry Teacher", "Co-Owner"),
+#                         start = c(1976, 1980, 1982, 1985, 1996.5, 1987, 1991, 1995, 2001),
+#                         end = c(1980, 1982, 1985, 1987, 1998, 1992, 1995, 1998, 2003),
+#                         side = c(1, 1, 1, 1, 1, 0, 0, 0, 0))
+#   milestones = data.frame(title = c("BA", "MS", "PhD"),
+#                           sub = c("Mathematics", "Chemistry", "Chemistry"),
+#                           year = c(1980, 1982, 1985))
+#   events = data.frame(year = c(1985, 1995, 2000, 2013, 2012),
+#                       title = c("Contributed to Nobel Prize winning experiment.",
+#                                 "Honorary mention for best Chemistry teacher of the year.",
+#                                 "Created Blue Sky, the most potent methamphetamine ever produced.",
+#                                 "Made first $1,000,000.",
+#                                 "White, W. & Pinkman, J. (2013). Early positive information impacts final [...].\nJournal of Behavioral Decision Making, 27."))
+#   interests = list("programming" = c(rep("R", 10), rep("Python", 1), rep("JavaScript", 2), "MatLab"),
+#                    "statistics" = c(rep("Decision Trees", 10), rep("Bayesian", 5), rep("Regression", 3)),
+#                    "leadership" = c(rep("Motivation", 10), rep("Decision Making", 5), rep("Manipulation", 30))
+#                    #            "test2" = c(rep("AAA", 10), rep("BBB", 50), rep("CCC", 3))
+#   )
+#   col = "xmen"
+#   year.steps = 2
+#   trans = .6
 
 
 # Convert factors to strings
 
-for(i in 1:ncol(bottom)) {if(class(bottom[,i]) == "factor") {bottom[,i] <- paste(bottom[,i])}}
-for(i in 1:ncol(top)) {if(class(top[,i]) == "factor") {top[,i] <- paste(top[,i])}}
+for(i in 1:ncol(timeline)) {if(class(timeline[,i]) == "factor") {timeline[,i] <- paste(timeline[,i])}}
 
 # Extract some parameters
 events.selected <- 1:nrow(events)
@@ -154,37 +138,49 @@ bottom.graph.label <- center.labels[2]
 ## Colors and Fonts
 {
 
-if(font.family %in% sysfonts::font.families.google()) {
+  if(font.family %in% sysfonts::font.families.google()) {
 
-  google.font <- TRUE
-  sysfonts::font.add.google(font.family, font.family)
-  showtext::showtext.begin()
+    google.font <- TRUE
+    sysfonts::font.add.google(font.family, font.family)
+    showtext::showtext.begin()
 
-} else {font.family <- NULL ; google.font <- FALSE}
+  } else {font.family <- NULL ; google.font <- FALSE}
 
-if(col %in% yarrr::piratepal(palette = "names")) {
-  color.vec <- yarrr::piratepal(palette = col, trans = trans)
-} else {
+  if(col %in% yarrr::piratepal(palette = "names")) {
+    color.vec <- yarrr::piratepal(palette = col, trans = trans)
+  } else {
 
-  color.vec <- col
+    color.vec <- col
 
-  # Make colors transparent
-  for(i in 1:length(color.vec)) {
+    # Make colors transparent
+    for(i in 1:length(color.vec)) {
 
-    col.o <- grDevices::col2rgb(col = color.vec[i])
-    col.n <- grDevices::rgb(red = col.o[1], green = col.o[2], blue = col.o[3], alpha = trans * 255, maxColorValue = 255)
+      col.o <- grDevices::col2rgb(col = color.vec[i])
+      col.n <- grDevices::rgb(red = col.o[1], green = col.o[2], blue = col.o[3], alpha = trans * 255, maxColorValue = 255)
 
-    color.vec[i] <- col.n
+      color.vec[i] <- col.n
+
+    }
 
   }
 
+  if(length(color.vec) < (nrow(timeline))) {
+
+    color.vec <- rep(color.vec, length.out = (nrow(timeline)))
+
+  }
 }
 
-if(length(color.vec) < (nrow(top) + nrow(bottom))) {
 
-  color.vec <- rep(color.vec, length.out = (nrow(top) + nrow(bottom)))
+# Get year range
 
-  }
+if(is.null(year.range)) {
+year.range <- c(floor(min(timeline$start)),
+                ceiling(max(timeline$end)))
+
+year.min <- min(year.range)
+year.max <- max(year.range)
+year.seq <- seq(year.min, year.max, by = year.steps)
 }
 
 # Plot Layout
@@ -202,15 +198,9 @@ layout(
 
   plot(1, xlim = c(0, 1), ylim = c(0, 1), bty = "n", type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
 
-#  segments(c( .02), c( 0), c(.98), c( 0), lwd = .8, col = "darkgray")
-
-  text(.02, .65, titles.left[1], adj = 0, cex = titles.left.cex[1], family = font.family)
-  text(.02, .3, titles.left[2], adj = 0, cex = titles.left.cex[2], family = font.family)
-  text(.02, .05, titles.left[3], adj = 0, cex = titles.left.cex[3], family = font.family)
-  text(.98, .65, titles.right[1], adj = 1, cex = titles.right.cex[1], family = font.family)
-  text(.98, .3, titles.right[2], adj = 1, cex = titles.right.cex[2], family = font.family)
-  text(.98, .05, titles.right[3], adj = 1, cex = titles.right.cex[3], family = font.family)
-
+  # Left and Right header titles
+  text(rep(.02, 3), c(.65, .3, .05), titles.left, adj = 0, cex = titles.left.cex, family = font.family)
+  text(rep(.98, 3), c(.65, .3, .05), titles.right, adj = 1, cex = titles.right.cex, family = font.family)
 
 }
 
@@ -221,21 +211,17 @@ layout(
 
   par(mai = c(0, 0, 0, 0))
 
+  # Minimum values of top and bottom
   top.y0 <- 55
   bottom.y0 <- 45
 
-  top$location <- "top"
-  bottom$location <- "bottom"
-
-  combined <- rbind(top, bottom)
-
   # Adjust simultaneous starting times
 
-  for(i in 2:nrow(combined)) {
+  for(i in 2:nrow(timeline)) {
 
-    if(combined$start[i] %in% combined$start[1:(i-1)]) {
+    if(timeline$start[i] %in% timeline$start[1:(i-1)]) {
 
-      combined$start[i] <- combined$start[i] + .1}
+      timeline$start[i] <- timeline$start[i] + .1}
 
   }
 
@@ -246,14 +232,11 @@ layout(
        bty = "n")
 
 
-  ## Background ribbons
-
   # Top separation
   points(seq(year.min - 1, year.max + 1, length.out = 50), rep(100, 50), pch = 16, col = c(gray(.7)), cex = c(1, .7))
 
   # Bottom separation
   points(seq(year.min - 1, year.max + 1, length.out = 50), rep(0, 50), pch = 16, col = c(gray(.7)), cex = c(1, .7))
-
 
 
   # ...
@@ -297,70 +280,70 @@ layout(
   change.box.y0 <- FALSE
   change.box.y1 <- FALSE
 
- if("box.x0" %in% names(combined) == FALSE) {
+ if("box.x0" %in% names(timeline) == FALSE) {
 
-    combined$box.x0 <- NA
+   timeline$box.x0 <- NA
    change.box.x0 <- TRUE
  }
 
- if("box.y0" %in% names(combined) == FALSE) {
+ if("box.y0" %in% names(timeline) == FALSE) {
 
-   combined$box.y0 <- NA
+   timeline$box.y0 <- NA
    change.box.y0 <- TRUE
 
  }
 
- if("box.x1" %in% names(combined) == FALSE) {
+ if("box.x1" %in% names(timeline) == FALSE) {
 
-   combined$box.x1 <- NA
+   timeline$box.x1 <- NA
    change.box.x1 <- TRUE
 
  }
 
- if("box.y1" %in% names(combined) == FALSE) {
+ if("box.y1" %in% names(timeline) == FALSE) {
 
-   combined$box.y1 <- NA
+   timeline$box.y1 <- NA
    change.box.y1 <- TRUE
 
  }
 
-  for (i in 1:nrow(combined)) {
+  for (i in 1:nrow(timeline)) {
 
       # Get default locations
 
-    if(is.na(combined$box.x0[i])) {
+    if(is.na(timeline$box.x0[i])) {
 
-      location.i <- combined$location[i]
-      box.x0 <- combined$start[i]
-      box.y0 <- switch(location.i,
-                       "bottom" = 45,
-                       "top" = 55)
-      box.x1 <- combined$end[i]
+      side.i <- timeline$side[i]
+      box.x0 <- timeline$start[i]
+      box.y0 <- switch(paste(side.i),
+                       "0" = 45,
+                       "1" = 55)
+      box.x1 <- timeline$end[i]
 
-      box.y1 <- switch(location.i,
-                       "bottom" = box.y0 - 10,
-                       "top" = box.y0 + 10)
+      box.y1 <- switch(paste(side.i),
+                       "0" = box.y0 - 10,
+                       "1" = box.y0 + 10)
 
       # Am I starting at the same time as a previous box?
 
-      simultaneous.boxes <- sum(combined$box.x0[1:(i-1)] == box.x0 &
-                                  combined$location[1:(i-1)] == location.i,
+      simultaneous.boxes <- sum(timeline$box.x0[1:(i-1)] == box.x0 &
+                                  timeline$side[1:(i-1)] == side.i,
                                 na.rm = TRUE)
 
       if(simultaneous.boxes > 0) {box.x0 <- box.x0 + .1 * simultaneous.boxes}
 
   # Am I starting within a previous box?
 
-      existing.boxes <- sum(combined$box.x0[-i] < box.x0 &
-                            combined$box.x1[-i] > box.x0 &
-                            combined$location[-i] == location.i, na.rm = TRUE)
+      existing.boxes <- sum(timeline$box.x0[-i] < box.x0 &
+                            timeline$box.x1[-i] > box.x0 &
+                            timeline$side[-i] == side.i, na.rm = TRUE)
 
-      box.y1 <- box.y1 + existing.boxes * switch(location.i, "top" = 4, "bottom" = -4)
+      box.y1 <- box.y1 + existing.boxes * switch(paste(side.i), "0" = -4, "1" = 4)
 
-      if(change.box.x0) {combined$box.x0[i] <- box.x0}
-      if(change.box.x1) {combined$box.x1[i] <- box.x1}
-      if(change.box.y0) {combined$box.y0[i] <- box.y0}
-      if(change.box.y1) {combined$box.y1[i] <- box.y1}
+      if(change.box.x0) {timeline$box.x0[i] <- box.x0}
+      if(change.box.x1) {timeline$box.x1[i] <- box.x1}
+      if(change.box.y0) {timeline$box.y0[i] <- box.y0}
+      if(change.box.y1) {timeline$box.y1[i] <- box.y1}
 
     }
   }
@@ -374,62 +357,59 @@ layout(
   change.point.x <- FALSE
   change.point.y <- FALSE
 
- if("point.x" %in% names(combined) == FALSE) {
+ if("point.x" %in% names(timeline) == FALSE) {
 
    change.point.x <- TRUE
-   combined$point.x <- NA
+   timeline$point.x <- NA
 
    }
 
-  if("point.y" %in% names(combined) == FALSE) {
+  if("point.y" %in% names(timeline) == FALSE) {
 
     change.point.y <- TRUE
-    combined$point.y <- NA
+    timeline$point.y <- NA
 
   }
 
-  for (i in 1:nrow(combined)) {
+  for (i in 1:nrow(timeline)) {
 
-      location.i <- combined$location[i]
+      side.i <- timeline$side[i]
 
       # Get default locations
 
       # Does another box start in this box?
 
-      conflicting.l <- combined$start[-i] > combined$start[i] & combined$start[-i] < combined$end[i]
+      conflicting.l <- timeline$start[-i] > timeline$start[i] & timeline$start[-i] < timeline$end[i]
 
       if(any(conflicting.l) == FALSE) {
 
-        point.x <- combined$start[i] + .25 * (combined$end[i] - combined$start[i])
-        point.y <- combined$box.y0[i] + switch(location.i, "bottom" = -5, "top" = 5)
-
-
+        point.x <- timeline$start[i] + .25 * (timeline$end[i] - timeline$start[i])
+        point.y <- timeline$box.y0[i] + switch(paste(side.i), "0" = -5, "1" = 5)
       }
 
       if(any(conflicting.l)) {
 
-        next.start <- min(combined$start[-i][conflicting.l])
+        next.start <- min(timeline$start[-i][conflicting.l])
 
-        point.x <- combined$start[i] + .25 * (next.start - combined$start[i])
-        point.y <- combined$box.y0[i] + switch(location.i, "bottom" = -5, "top" = 5)
+        point.x <- timeline$start[i] + .25 * (next.start - timeline$start[i])
+        point.y <- timeline$box.y0[i] + switch(paste(side.i), "0" = -5, "1" = 5)
 
       }
 
       # Is there another point in the same location?
 
-      points.conflicting <- sum(abs(combined$point.x[-i] - point.x) < .1 &
-                                abs(combined$point.y[-i] - point.y) < .1, na.rm = TRUE)
+      points.conflicting <- sum(abs(timeline$point.x[-i] - point.x) < .1 &
+                                abs(timeline$point.y[-i] - point.y) < .1, na.rm = TRUE)
 
       if(any(points.conflicting)) {
 
         point.x <- point.x + sum(points.conflicting) * .1
-
         point.y <- point.y + sum(points.conflicting)
 
       }
 
-      if(change.point.x) {combined$point.x[i] <- point.x}
-      if(change.point.y) {combined$point.y[i] <- point.y}
+      if(change.point.x) {timeline$point.x[i] <- point.x}
+      if(change.point.y) {timeline$point.y[i] <- point.y}
 
   }
 
@@ -448,88 +428,93 @@ layout(
    change.label.y <- FALSE
 
 
- if("label.dir" %in% names(combined) == FALSE) {
+ if("label.dir" %in% names(timeline) == FALSE) {
 
    change.label.dir <- TRUE
-   combined$label.dir <- NA
+   timeline$label.dir <- NA
 
  }
 
- if("text.adj" %in% names(combined) == FALSE) {
+ if("text.adj" %in% names(timeline) == FALSE) {
 
-   combined$text.adj <- NA
+   timeline$text.adj <- NA
    change.text.adj <- TRUE
 
  }
 
- if("elbow" %in% names(combined) == FALSE) {
+ if("elbow" %in% names(timeline) == FALSE) {
 
-   combined$elbow <- NA
+   timeline$elbow <- NA
    change.elbow <- TRUE
  }
 
 
- if("label.x" %in% names(combined) == FALSE) {
+ if("label.x" %in% names(timeline) == FALSE) {
 
-   combined$label.x <- NA
+   timeline$label.x <- NA
    change.label.x <- TRUE
 
  }
 
- if("label.y" %in% names(combined) == FALSE) {
+ if("label.y" %in% names(timeline) == FALSE) {
 
-   combined$label.x <- NA
+   timeline$label.x <- NA
    change.label.y <- TRUE
 
  }
 
-for(i in 1:nrow(combined)) {
+for(i in 1:nrow(timeline)) {
 
     method <- 2
 
-if(is.na(combined$label.x[i])) {
+if(is.na(timeline$label.x[i])) {
 
   if(method == 1) {
 
-    location.i <- combined$location[i]
-    label.x <- combined$point.x[i]
+    side.i <- timeline$sode[i]
+    label.x <- timeline$point.x[i]
 
-    # Do other boxes start within X years on the right or left?
+    # Do other boxes start within x percent of the timeline on the right or left?
 
-    right.conflicting.l <- (combined$start[-i] >= combined$start[i]) & (combined$start[-i] <= combined$start[i] + 3) & (combined$location[-i] == location.i)
-    left.conflicting.l <- combined$start[-i] <= combined$start[i] & (combined$start[-i] >= combined$start[i] - 3) & (combined$location[-i] == location.i)
+    scare.p <- .1
+    scare.dist <- scare.p * diff(year.range)
+
+    right.conflicting.l <- (timeline$start[-i] >= timeline$start[i]) & (timeline$start[-i] <= timeline$start[i] + scare.dist) & (timeline$side[-i] == side.i)
+    left.conflicting.l <- timeline$start[-i] <= timeline$start[i] & (timeline$start[-i] >= timeline$start[i] - scare.dist) & (timeline$side[-i] == side.i)
 
     # If there are no conflicts, go right
 
     if(any(right.conflicting.l) == FALSE &
        any(left.conflicting.l) == FALSE) {
 
-      label.y <- combined$box.y1[i] + switch(location.i,
-                                             "bottom" = -10,
-                                             "top" = 10)
+      label.y <- timeline$box.y1[i] + switch(paste(side.i),
+                                             "0" = -10,
+                                             "1" = 10)
       label.dir <- "right"
       text.adj <- 0
       elbow <- .1
 
-
     }
+
+
+
 
     # If there are more right than left conflicts then go left
 
     if(sum(right.conflicting.l) > sum(left.conflicting.l)) {
 
-      conflicting.box.heights <- combined$box.y1[-i][left.conflicting.l | right.conflicting.l]
-      conflicting.label.heights <- combined$label.y[-i][left.conflicting.l | right.conflicting.l]
+      conflicting.box.heights <- timeline$box.y1[-i][left.conflicting.l | right.conflicting.l]
+      conflicting.label.heights <- timeline$label.y[-i][left.conflicting.l | right.conflicting.l]
 
-      if(location.i == "top") {
+      if(side.i == 1) {
 
-        label.y <- max(c(conflicting.box.heights, combined$box.y1[i], conflicting.label.heights)) + 10
+        label.y <- max(c(conflicting.box.heights, timeline$box.y1[i], conflicting.label.heights)) + 10
 
       }
 
-      if(location.i == "bottom") {
+      if(side.i == 0) {
 
-        label.y <- min(c(conflicting.box.heights, combined$box.y1[i], conflicting.label.heights)) - 10
+        label.y <- min(c(conflicting.box.heights, timeline$box.y1[i], conflicting.label.heights)) - 10
 
       }
 
@@ -542,18 +527,18 @@ if(is.na(combined$label.x[i])) {
 
     if(sum(right.conflicting.l) <= sum(left.conflicting.l)) {
 
-      conflicting.box.heights <- combined$box.y1[-i][right.conflicting.l]
-      conflicting.label.heights <- combined$label.y[-i][right.conflicting.l]
+      conflicting.box.heights <- timeline$box.y1[-i][right.conflicting.l]
+      conflicting.label.heights <- timeline$label.y[-i][right.conflicting.l]
 
-      if(location.i == "top") {
+      if(side.i == 1) {
 
-        label.y <- max(c(conflicting.box.heights, combined$box.y1[i], conflicting.label.heights)) + 10
+        label.y <- max(c(conflicting.box.heights, timeline$box.y1[i], conflicting.label.heights)) + 10
 
       }
 
-      if(location.i == "bottom") {
+      if(side.i == 0) {
 
-        label.y <- min(c(conflicting.box.heights, combined$box.y1[i], conflicting.label.heights)) - 10
+        label.y <- min(c(conflicting.box.heights, timeline$box.y1[i], conflicting.label.heights)) - 10
 
       }
 
@@ -566,11 +551,11 @@ if(is.na(combined$label.x[i])) {
 
     if(i > 1) {
 
-      label.conflict.l <- (combined$point.x[-i] - combined$point.x[i]) > -4 &
-        (combined$point.x[-i] - combined$point.x[i]) < 0 &
-        nchar(combined$title[-i]) > 8 &
-        combined$label.dir[-i] == "right" &
-        combined$location[-i] == location.i
+      label.conflict.l <- (timeline$point.x[-i] - timeline$point.x[i]) > -scare.dist &
+        (timeline$point.x[-i] - timeline$point.x[i]) < 0 &
+        nchar(timeline$title[-i]) > 8 &
+        timeline$label.dir[-i] == "right" &
+        timeline$side[-i] == side.i
 
       if(any(label.conflict.l)) {
 
@@ -584,15 +569,14 @@ if(is.na(combined$label.x[i])) {
 
       # Grid method
 
-    location.i <- combined$location[i]
-    point.x <- combined$point.x[i]
-    box.y <- combined$box.y1[i]
+    side.i <- timeline$side[i]
+    point.x <- timeline$point.x[i]
+    box.y <- timeline$box.y1[i]
 
     x.loc <- c(point.x)
-      #x.loc <- seq(point.x - 1, point.x + 1, length.out = 5)
 
-    if(location.i == "top") {y.loc <- seq(box.y, 90, length.out = 10)}
-    if(location.i == "bottom") {y.loc <- seq(box.y, 10, length.out = 10)}
+    if(side.i == 1) {y.loc <- seq(box.y, 90, length.out = 10)}
+    if(side.i == 0) {y.loc <- seq(box.y, 10, length.out = 10)}
 
       location.mtx <- expand.grid(x = x.loc, y = y.loc)
 
@@ -600,21 +584,19 @@ if(is.na(combined$label.x[i])) {
 
       x.dev <- abs(location.mtx$x - point.x)
 
-      if(combined$location[i] == "top") {
+      if(timeline$side[i] == 1) {
 
       y.dev <- abs(location.mtx$y - (box.y + 10))
 
       }
 
-      if(combined$location[i] == "bottom") {
+      if(timeline$side[i] == 0) {
 
         y.dev <- abs(location.mtx$y - (box.y - 10))
 
       }
 
       joint.dev <- x.dev + y.dev
-
-      # joint.dev[location.mtx$y < box.y]
 
       if(i == 1) {
 
@@ -632,12 +614,17 @@ if(is.na(combined$label.x[i])) {
 
         for(j in 1:(i - 1)) {
 
-          if(combined$location[j] == combined$location[i]) {
+          if(timeline$side[j] == timeline$side[i]) {
 
-       other.x.loc <- combined$label.x[j]
-       other.y.loc <- combined$label.y[j]
+       other.x.loc <- timeline$label.x[j]
+       other.y.loc <- timeline$label.y[j]
 
-       x.dev.l <- abs(other.x.loc - location.mtx$x) < 2.5
+       # Are there other labels within scare.p years?
+
+       scare.p <- .15
+       scare.d <- scare.p * diff(year.range)
+
+       x.dev.l <- abs(other.x.loc - location.mtx$x) < scare.d
 
        x.dev <- x.dev + as.numeric(x.dev.l)
 
@@ -657,10 +644,22 @@ if(is.na(combined$label.x[i])) {
 
         # Is there a previous right direction label within 2 years?
 
-        if(any(combined$location[1:(i - 1)] == combined$location[i] &
-               combined$point.x[1:(i - 1)] > (combined$point.x[i] - 2) #&
-              # combined$label.dir[1:(i - 1)] == "right"
-        )) {label.dir <- "right"
+        scare.p <- .1
+        scare.d <- scare.p * diff(year.range)
+
+        # Potentially conflicting blocks on left
+        l.conflicting.l <- any(timeline$side[1:(i - 1)] == timeline$side[i] &
+                                 timeline$point.x[1:(i - 1)] > (timeline$point.x[i] - scare.d))
+
+        # Is everything clear on the right for the next scare.d?
+        side.i <- timeline$side[i]
+        point.x.i <- timeline$point.x[i]
+
+        r.free.l <- nrow(subset(timeline[-i,],
+                                side == side.i &
+                                point.x > point.x.i & point.x < (point.x.i + scare.d))) == 0
+
+        if(l.conflicting.l | r.free.l) {label.dir <- "right"
            text.adj <- 0
            elbow <- .1
 
@@ -677,33 +676,33 @@ if(is.na(combined$label.x[i])) {
   }
 
     # Write values
-    if(change.label.y) {combined$label.y[i] <- label.y}
-    if(change.label.x) {combined$label.x[i] <- label.x}
-    if(change.label.dir) {combined$label.dir[i] <- label.dir}
-    if(change.text.adj) {combined$text.adj[i] <- text.adj}
-    if(change.elbow) {combined$elbow[i] <- elbow}
+    if(change.label.y) {timeline$label.y[i] <- label.y}
+    if(change.label.x) {timeline$label.x[i] <- label.x}
+    if(change.label.dir) {timeline$label.dir[i] <- label.dir}
+    if(change.text.adj) {timeline$text.adj[i] <- text.adj}
+    if(change.elbow) {timeline$elbow[i] <- elbow}
 
   }
  }
 
 # Draw!
 
- for(i in 1:nrow(combined)) {
+ for(i in 1:nrow(timeline)) {
 
   # Box
 
-  rect(xleft = combined$box.x0[i],
-       ybottom = combined$box.y0[i],
-       xright = combined$box.x1[i],
-       ytop = combined$box.y1[i],
+  rect(xleft = timeline$box.x0[i],
+       ybottom = timeline$box.y0[i],
+       xright = timeline$box.x1[i],
+       ytop = timeline$box.y1[i],
        col = color.vec[i],
        border = "black",
        lwd = .5)
 
   # Points
 
-  points(combined$point.x[i],
-         combined$point.y[i],
+  points(timeline$point.x[i],
+         timeline$point.y[i],
          pch = 21,
          cex = 2,
          col = "black",
@@ -712,34 +711,34 @@ if(is.na(combined$label.x[i])) {
   # Add lines
 
   # Main line
-  segments(combined$point.x[i],
-           combined$point.y[i],
-           combined$label.x[i],
-           combined$label.y[i],
+  segments(timeline$point.x[i],
+           timeline$point.y[i],
+           timeline$label.x[i],
+           timeline$label.y[i],
            lty = 2)
 
   # Elbow line
-  segments(combined$label.x[i],
-           combined$label.y[i],
-           combined$label.x[i] + combined$elbow[i],
-           combined$label.y[i],
+  segments(timeline$label.x[i],
+           timeline$label.y[i],
+           timeline$label.x[i] + timeline$elbow[i],
+           timeline$label.y[i],
            lty = 2)
 
   # Main Text
 
-  text(combined$label.x[i] + combined$elbow[i],
-       combined$label.y[i],
-       adj = combined$text.adj[i],
-       labels = combined$title[i],
+  text(timeline$label.x[i] + timeline$elbow[i],
+       timeline$label.y[i],
+       adj = timeline$text.adj[i],
+       labels = timeline$title[i],
        cex = 1.8,
        family = font.family
   )
 
   #
-  # text.outline(combined$label.x[i] + combined$elbow[i],
-  #              combined$label.y[i],
-  #              adj = combined$text.adj[i],
-  #              labels = combined$title[i],
+  # text.outline(timeline$label.x[i] + timeline$elbow[i],
+  #              timeline$label.y[i],
+  #              adj = timeline$text.adj[i],
+  #              labels = timeline$title[i],
   #              cex = 1.8,
   #              family = font.family,
   #              bg = gray(.97, .5),
@@ -749,10 +748,10 @@ if(is.na(combined$label.x[i])) {
 
   # Sub Text
 
-  text(combined$label.x[i] + combined$elbow[i],
-       combined$label.y[i] - 3,
-       adj = combined$text.adj[i],
-       labels = combined$sub[i],
+  text(timeline$label.x[i] + timeline$elbow[i],
+       timeline$label.y[i] - 3,
+       adj = timeline$text.adj[i],
+       labels = timeline$sub[i],
        cex = 1,
        family = font.family)
 
@@ -760,14 +759,14 @@ if(is.na(combined$label.x[i])) {
 
   # --------- Upper milestones
 
-  text(milestones$date,
+  text(milestones$year,
        rep(95, nrow(milestones)),
        milestones$title, cex = 2, adj = 1, family = font.family, font = 3
   )
 
-  text(milestones$date,
+  text(milestones$year,
        rep(90, nrow(milestones)),
-       milestones$subtitle,
+       milestones$sub,
        cex = 1.5, adj = 1, family = font.family, font = 1)
 
 
@@ -779,113 +778,11 @@ if(is.na(combined$label.x[i])) {
 }
 
 # ----------------
-# Bottom Row
+# Bottom
 # ----------------
 {
-  # --- Bottom left graph
+  # --- Bottom left Interests
 {
-
-  bl <- "network2"
-
-#   if(bl == "wordcloud") {
-#
-#   par(mar = c(0, 1, 0, 0))
-#   if(mean(is.na(words)) != 1) {
-#
-#     wordcloud::wordcloud(words, words.freq, scale = c(1, 2))
-#
-#     text(.5, .99, bottom.labels[1], cex = 2, adj = .5, family = font.family)
-#    # rect(0, 0, .9, .9, lwd = .5)
-#
-#   }
-#   }
-#
-#   if(bl == "network") {
-#
-#     par(xpd = TRUE)
-#     par(mar = c(3, 3, 3, 3))
-#
-#     nodesize = 5
-#     edgesize = 1
-#
-#     for(i in 1:length(interests)) {
-#
-#       edges.i <- expand.grid(names(interests)[i], interests[[i]])
-#
-#       if(i == 1) {edges <- edges.i}
-#       if(i > 1) {edges <- rbind(edges, edges.i)}
-#
-#     }
-#
-# edges$n <- 1
-#    g <- igraph::graph_from_data_frame(edges, directed = FALSE)
-#
-#   cue.names <- igraph::get.vertex.attribute(g)$name
-#    # l <- igraph::layout_with_fr(g)
-#    locations <- igraph::layout_with_dh(g)
-#
-#    # Setup plotting region
-#    plot.new()
-#
-#    mtext(text = bottom.labels[1], side = 3)
-#
-#    if(min(locations[,1]) < 0) {x.min <- min(locations[,1]) * 1.1}
-#    if(max(locations[,1]) < 0) {x.max <- max(locations[,1]) * .9}
-#    if(min(locations[,2]) < 0) {y.min <- min(locations[,2]) * 1.1}
-#    if(max(locations[,2]) < 0) {y.max <- max(locations[,2]) * .9}
-#
-#    if(min(locations[,1]) > 0) {x.min <- min(locations[,1]) * .9}
-#    if(max(locations[,1]) > 0) {x.max <- max(locations[,1]) * 1.1}
-#    if(min(locations[,2]) > 0) {y.min <- min(locations[,2]) * .9}
-#    if(max(locations[,2]) > 0) {y.max <- max(locations[,2]) * 1.1}
-#
-#    plot.window(xlim = c(x.min, x.max),
-#                ylim = c(y.min, y.max))
-#    # Create edges
-#
-#    for (i in 1:nrow(edges)) {
-#
-#      is <- c(which(cue.names == edges[i, 1]),
-#              which(cue.names == edges[i, 2]))
-#
-#      lines(x = c(locations[is[1], 1], locations[is[2], 1]),
-#            y = c(locations[is[1], 2], locations[is[2], 2]),
-#            lwd = .5,
-#            lty = 1,
-#            col = gray(.5, .5))
-#
-#    }
-#
-#    # Add points
-#
-#    # for(i in 1:length(cue.names)){
-#    #   #  points(l[i,1] + .04, l[i, 2] - .04, cex = frequencies[v[i]]**nodesize, pch = 16, col = 'grey50')
-#    #
-#    #
-#    #   relfreq.i <- .5
-#    #
-#    #   points(x = locations[i, 1],
-#    #          y = locations[i, 2],
-#    #          cex = relfreq.i * nodesize,
-#    #          pch = 21,
-#    #          col = "black",
-#    #          bg = gray(1 - relfreq.i))
-#    # }
-#
-#    # Add text
-#
-#    for(i in 1:length(cue.names)){
-#      text(x = locations[i, 1],
-#           y = locations[i, 2],
-#           labels = cue.names[i],
-#           cex = 1)
-#    }
-#    par(xpd = FALSE)
-#
-#
-#   }
-
-  if(bl == "network2") {
 
     par(xpd = TRUE)
     par(mar = c(3, 3, 0, 1))
@@ -1040,27 +937,10 @@ if(is.na(combined$label.x[i])) {
    }
 
 
-
-
-
-  }
-
 }
 
-#   # ---- Bottom middle graph
-# {
-#   par(mar = c(0, 0, 0, 0))
-#
-#
-#   plot(1, xlim = c(0, 1), ylim = c(0, 1), ylab = "", xlab = "", bty = "n", type = "n", yaxt = "n", xaxt = "n")
-#
-#   text(.5, .99, bottom.labels[2], adj = .5, cex = 2, family = font.family)
-#
-#   text(rep(0, 4), c(.8, .6, .4, .2), links[1:4], adj = 0, cex = 1.7, family = font.family)
-#
-# }
 
-  # ---- Bottom right graph
+  # ---- Bottom right Events
 {
 
   par(mar = c(3, 0, 0, 3))
