@@ -5,27 +5,18 @@
 \title{Creates a visual resume from dataframes specifying important events (e.g.; jobs or education) and interests / skills. The plot is optimized for an 8.5 in x 11 in display.}
 \usage{
 VisualResume(titles.left = c("Main Title", "Sub-title", "Sub-Sub-title"),
-  titles.left.cex = c(4, 2, 1), titles.right = c("www.a.com",
-  "me@gmail.com", ""), titles.right.cex = c(3, 2, 1), center.labels = c("D",
-  "E"), timeline = data.frame(title = c("College A", "University B",
-  "University C", "Project A", "Project B", "Project C"), sub = c("a", "b", "c",
-  "a", "b", "c"), start = c(2001.5, 2006.5, 2011, 2010, 2014.6, 2014.6), end =
-  c(2005.5, 2010.9, 2014.5, 2010.5, 2015.2, 2015.2), side = c(1, 1, 1, 0, 0,
-  0)), milestones = data.frame(title = c("BA", "MS", "Ph.D"), sub = c("2005",
-  "2010", "2014"), year = c(2005.5, 2010.9, 2014.5)),
-  events = data.frame(title = c("a", "b", "c"), year = c(2007, 2011.5,
-  2014.2)), events.cex = 1.5, interests = list(Programming = c("R",
-  "Javascript", "HTML"), Statistics = c("Bayesian", "Regression",
-  "Decision\\nTrees"), Research = c("Decision Making", "Foraging")),
-  font.family = NA, col = "xmen", trans = 0.6, year.steps = 1,
-  year.range = NULL)
+  titles.left.cex = c(4, 3, 2), titles.right = c("A", "B", "C"),
+  titles.right.cex = c(4, 3, 2), timeline.labels = c("", ""),
+  timeline = NULL, milestones = NULL, events = NULL, events.cex = 1.5,
+  interests = NULL, font.family = NA, col = "xmen", trans = 0.6,
+  year.steps = 1, year.range = NULL)
 }
 \arguments{
 \item{titles.left, titles.right}{character. Vector of up to length three indicating labels to be shown in the top left / right.}
 
 \item{titles.left.cex, titles.right.cex}{numeric. Vector indicating the size of the respective labels.}
 
-\item{center.labels}{character. Vector of two labels for the top and bottom sections of the timeline.}
+\item{timeline.labels}{character. Vector of two labels for the top and bottom sections of the timeline.}
 
 \item{timeline}{dataframe. Specifications of the elements in the timeline. See Details}
 
@@ -75,10 +66,10 @@ titles.left = c("Walter White, PhD", "Chemistry, Cooking, Pizza", "*Built with l
 titles.right = c("www.lospolloshermanos.com", "TheOneWhoKnocks@gmail.com", "Full Resume: www.ndphillips.github.io"),
 titles.right.cex = c(2, 2, 1),
 titles.left.cex = c(4, 2, 1),
-center.labels = c("Education", "Teaching"),
+timeline.labels = c("Education", "Teaching"),
 timeline = data.frame(title = c("Grinnell Col", "Ohio U", "U of Basel", "Max Planck Institute", "Old Van", "Gray Matter", "Sandia Laboratories", "J.P. Wynne High School", "A1A Car Wash"),
                      sub = c("BA. Student", "MS. Student", "PhD. Student", "PhD. Researcher", "Methamphetamine Research", "Co-Founder", "Chemist", "Chemistry Teacher", "Co-Owner"),
-                     start = c(1976, 1980, 1982, 1985, 1996.5, 1987, 1991, 1995, 2001),
+                     start = c(1976, 1980.1, 1982.2, 1985, 1996.5, 1987, 1991, 1995, 2001),
                      end = c(1980, 1982, 1985, 1987, 1998, 1992, 1995, 1998, 2003),
                      side = c(1, 1, 1, 1, 1, 0, 0, 0, 0)),
 milestones = data.frame(title = c("BA", "MS", "PhD"),

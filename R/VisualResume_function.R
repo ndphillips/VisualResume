@@ -66,64 +66,21 @@
 
 
 VisualResume <- function(titles.left = c("Main Title", "Sub-title", "Sub-Sub-title"),
-                          titles.left.cex = c(4, 2, 1),
-                          titles.right = c("www.a.com", "me@gmail.com", ""),
-                          titles.right.cex = c(3, 2, 1),
-                          timeline.labels = c("D", "E"),
-                          timeline = data.frame(title = c("College A", "University B", "University C", "Project A", "Project B", "Project C"),
-                                                sub = c("a", "b", "c", "a", "b", "c"),
-                                                start = c(2001.5, 2006.5, 2011, 2010, 2014.6, 2014.6),
-                                                end = c(2005.5, 2010.9, 2014.5, 2010.5, 2015.2, 2015.2),
-                                                side = c(1, 1, 1, 0, 0, 0)),
-                          milestones = data.frame(title = c("BA", "MS", "Ph.D"),
-                                                  sub = c("2005", "2010", "2014"),
-                                                  year = c(2005.5, 2010.9, 2014.5)),
-                          events = data.frame(title = c("a", "b", "c"),
-                                              year = c(2007, 2011.5, 2014.2)),
+                          titles.left.cex = c(4, 3, 2),
+                          titles.right = c("A", "B", "C"),
+                          titles.right.cex = c(4, 3, 2),
+                          timeline.labels = c("", ""),
+                          timeline = NULL,
+                          milestones = NULL,
+                          events = NULL,
                           events.cex = 1.5,
-                          interests = list("Programming" = c("R", "Javascript", "HTML"),
-                                           "Statistics" = c("Bayesian", "Regression", "Decision\nTrees"),
-                                           "Research" = c("Decision Making", "Foraging")
-                                           ),
+                          interests = NULL,
                           font.family = NA,
                           col = "xmen",
                           trans = .6,
                           year.steps = 1,
                           year.range = NULL
                           ) {
-
-
-  # TEST VALUES
-# year.range <- NULL
-# year.steps <- 1
-# font.family <- NA
-#   titles.left = c("Walter White, PhD", "Chemistry, Cooking, Pizza", "*Built with love in R using the InfoResume package: www.ndphillips.github.io/inforesume")
-#   titles.right = c("www.lospolloshermanos.com", "TheOneWhoKnocks@gmail.com", "Full Resume: www.ndphillips.github.io")
-#   titles.right.cex = c(2, 2, 1)
-#   titles.left.cex = c(4, 2, 1)
-#   timeline.labels = c("Education", "Teaching")
-#   timeline = data.frame(title = c("Grinnell Col", "Ohio U", "U of Basel", "MPIB", "Old Van", "Gray Matter", "Sandia Laboratories", "J.P. Wynne High School", "A1A Car Wash"),
-#                         sub = c("BA. Student", "MS. Student", "PhD. Student", "PhD. Researcher", "Methamphetamine Research", "Co-Founder", "Chemist", "Chemistry Teacher", "Co-Owner"),
-#                         start = c(1976, 1980, 1982, 1985, 1996.5, 1987, 1991, 1995, 2001),
-#                         end = c(1980, 1982, 1985, 1987, 1998, 1992, 1995, 1998, 2003),
-#                         side = c(1, 1, 1, 1, 1, 0, 0, 0, 0))
-#   milestones = data.frame(title = c("BA", "MS", "PhD"),
-#                           sub = c("Mathematics", "Chemistry", "Chemistry"),
-#                           year = c(1980, 1982, 1985))
-#   events = data.frame(year = c(1985, 1995, 2000, 2013, 2012),
-#                       title = c("Contributed to Nobel Prize winning experiment.",
-#                                 "Honorary mention for best Chemistry teacher of the year.",
-#                                 "Created Blue Sky, the most potent methamphetamine ever produced.",
-#                                 "Made first $1,000,000.",
-#                                 "White, W. & Pinkman, J. (2013). Early positive information impacts final [...].\nJournal of Behavioral Decision Making, 27."))
-#   interests = list("programming" = c(rep("R", 10), rep("Python", 1), rep("JavaScript", 2), "MatLab"),
-#                    "statistics" = c(rep("Decision Trees", 10), rep("Bayesian", 5), rep("Regression", 3)),
-#                    "leadership" = c(rep("Motivation", 10), rep("Decision Making", 5), rep("Manipulation", 30))
-#                    #            "test2" = c(rep("AAA", 10), rep("BBB", 50), rep("CCC", 3))
-#   )
-#   col = "xmen"
-#   year.steps = 2
-#   trans = .6
 
 
 # Convert factors to strings
@@ -913,7 +870,6 @@ if(is.na(timeline$label.x[i])) {
         b <- y1 - m * x1
 
         line.len <- sqrt(abs(x2 - x1) ^ 2 + abs(y2 - y1) ^ 2)
-
 
         if(x1 < x2) {x1.n <- x1 + (short / 2) * line.len ; x2.n <- x2 - (short / 2) * line.len}
         if(x1 > x2) {x1.n <- x1 - (short / 2) * line.len ; x2.n <- x2 + (short / 2) * line.len}
