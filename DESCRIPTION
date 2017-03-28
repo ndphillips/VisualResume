@@ -1,8 +1,8 @@
 Package: VisualResume
 Type: Package
 Title: Visual Resume creator
-Version: 0.1.0
-Date: 2017-01-01
+Version: 0.1.1
+Date: 2017-01-27
 Authors@R: person("Nathaniel", "Phillips", email = "Nathaniel.D.Phillips.is@gmail.com",
                   role = c("aut", "cre"))
 License: GPL-2
@@ -14,4 +14,4 @@ URL: https://ndphillips.github.io/VisualResume.html
 BugReports: https://github.com/ndphillips/VisualResume/issues
 LazyData: true
 RoxygenNote: 5.0.1
-Depends: yarrr, showtext, sysfonts, BayesFactor, showtext
+Depends: yarrr, showtext, sysfonts, BayesFactor, showtext, showtextdb
