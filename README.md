@@ -41,3 +41,9 @@ You can install `VisualResume` from GitHub as follows:
 #install.packages("devtools") # Only if you don't have the devtools package
 devtools::install_github("ndphillips/VisualResume")
 ```
+
+### Release notes
+
+0.1.1
+
+-   Added `timeline.cex` argument to control timeline text size.
