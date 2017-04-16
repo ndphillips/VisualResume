@@ -7,9 +7,9 @@
 VisualResume(titles.left = c("Main Title", "Sub-title", "Sub-Sub-title"),
   titles.left.cex = c(4, 3, 2), titles.right = c("A", "B", "C"),
   titles.right.cex = c(4, 3, 2), timeline.labels = c("", ""),
-  timeline = NULL, milestones = NULL, events = NULL, events.cex = 1.5,
-  interests = NULL, font.family = NA, col = "xmen", trans = 0.6,
-  year.steps = 1, year.range = NULL)
+  timeline.cex = c(1.8, 1), timeline = NULL, milestones = NULL,
+  events = NULL, events.cex = 1.5, interests = NULL, font.family = NA,
+  col = "xmen", trans = 0.6, year.steps = 1, year.range = NULL)
 }
 \arguments{
 \item{titles.left, titles.right}{character. Vector of up to length three indicating labels to be shown in the top left / right.}
@@ -17,6 +17,8 @@ VisualResume(titles.left = c("Main Title", "Sub-title", "Sub-Sub-title"),
 \item{titles.left.cex, titles.right.cex}{numeric. Vector indicating the size of the respective labels.}
 
 \item{timeline.labels}{character. Vector of two labels for the top and bottom sections of the timeline.}
+
+\item{timeline.cex}{numeric. Vector of length 2 indicating the size of the timeline text. The first element is for the main text, the second element is for the sub text.}
 
 \item{timeline}{dataframe. Specifications of the elements in the timeline. See Details}
 
@@ -87,4 +89,3 @@ interests = list("programming" = c(rep("R", 10), rep("Python", 1), rep("JavaScri
 year.steps = 2)
 
 }
-

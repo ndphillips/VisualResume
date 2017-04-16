@@ -4,6 +4,7 @@
 #' @param titles.left.cex,titles.right.cex numeric. Vector indicating the size of the respective labels.
 #' @param timeline.labels character. Vector of two labels for the top and bottom sections of the timeline.
 #' @param timeline dataframe. Specifications of the elements in the timeline. See Details
+#' @param timeline.cex numeric. Vector of length 2 indicating the size of the timeline text. The first element is for the main text, the second element is for the sub text.
 #' @param milestones dataframe. Specifications of brief level-1 timeline milestones (at top of timeline). Should contain the columns \code{year} (integer) and \code{title} (character)
 #' @param events dataframe. Specificaions of longer level-2 milestones (in bottom right plot). Should contain the columns \code{year} (integer) and \code{title} (character)
 #' @param interests list. A list of length up to 4 indicating one's interests / skills. Each entry should be a character vector up to length 5. The more often a value occurs in the vector, the more pronounced it will be.
@@ -70,6 +71,7 @@ VisualResume <- function(titles.left = c("Main Title", "Sub-title", "Sub-Sub-tit
                           titles.right = c("A", "B", "C"),
                           titles.right.cex = c(4, 3, 2),
                           timeline.labels = c("", ""),
+                          timeline.cex = c(1.8, 1),
                           timeline = NULL,
                           milestones = NULL,
                           events = NULL,
@@ -699,7 +701,7 @@ if(is.na(timeline$label.x[i])) {
        timeline$label.y[i],
        adj = timeline$text.adj[i],
        labels = timeline$title[i],
-       cex = 1.8,
+       cex = timeline.cex[1],
        family = font.family
   )
 
@@ -721,7 +723,7 @@ if(is.na(timeline$label.x[i])) {
        timeline$label.y[i] - 3,
        adj = timeline$text.adj[i],
        labels = timeline$sub[i],
-       cex = 1,
+       cex = timeline.cex[2],
        family = font.family)
 
 }

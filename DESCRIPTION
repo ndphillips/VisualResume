@@ -13,5 +13,5 @@ Encoding: UTF-8
 URL: https://ndphillips.github.io/VisualResume.html
 BugReports: https://github.com/ndphillips/VisualResume/issues
 LazyData: true
-RoxygenNote: 5.0.1
-Depends: yarrr, showtext, sysfonts, BayesFactor, showtext
+RoxygenNote: 6.0.1
+Depends: yarrr, showtext, sysfonts
