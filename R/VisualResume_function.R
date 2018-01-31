@@ -85,6 +85,7 @@ VisualResume <- function(titles.left = c("Main Title", "Sub-title", "Sub-Sub-tit
                           ) {
 
 
+
 # Convert factors to strings
 
 for(i in 1:ncol(timeline)) {if(class(timeline[,i]) == "factor") {timeline[,i] <- paste(timeline[,i])}}
@@ -462,8 +463,6 @@ if(is.na(timeline$label.x[i])) {
                                              "0" = -10,
                                              "1" = 10)
       label.dir <- "right"
-      text.adj <- 0
-      elbow <- .1
 
     }
 
@@ -490,8 +489,6 @@ if(is.na(timeline$label.x[i])) {
       }
 
       label.dir <- "left"
-      text.adj <- 1
-      elbow <- -.1
     }
 
     # If there are more left than right conflicts
@@ -514,8 +511,6 @@ if(is.na(timeline$label.x[i])) {
       }
 
       label.dir <- "right"
-      text.adj <- 0
-      elbow <- .1
     }
 
     # Are there any long labels on the left?
@@ -576,8 +571,7 @@ if(is.na(timeline$label.x[i])) {
         label.x <- location.mtx$x[which.min]
         label.y <- location.mtx$y[which.min]
         label.dir <- "right"
-        text.adj <- 0
-        elbow <- .1
+
 
       }
 
@@ -630,13 +624,7 @@ if(is.na(timeline$label.x[i])) {
                                 side == side.i &
                                 point.x > point.x.i & point.x < (point.x.i + scare.d))) == 0
 
-        if(l.conflicting.l | r.free.l) {label.dir <- "right"
-           text.adj <- 0
-           elbow <- .1
-
-        } else {label.dir <- "left"
-        text.adj <- 1
-        elbow <- -.1
+        if(l.conflicting.l | r.free.l) {label.dir <- "right"} else {label.dir <- "left"
         }
 
 
@@ -650,8 +638,21 @@ if(is.na(timeline$label.x[i])) {
     if(change.label.y) {timeline$label.y[i] <- label.y}
     if(change.label.x) {timeline$label.x[i] <- label.x}
     if(change.label.dir) {timeline$label.dir[i] <- label.dir}
-    if(change.text.adj) {timeline$text.adj[i] <- text.adj}
-    if(change.elbow) {timeline$elbow[i] <- elbow}
+
+    if(change.elbow) {
+
+      if(timeline$label.dir[i] == "left") {timeline$elbow[i] <- -.1}
+      if(timeline$label.dir[i] == "right") {timeline$elbow[i] <- .1}
+
+    }
+
+    if(change.text.adj) {
+
+      if(timeline$label.dir[i] == "left") {timeline$text.adj[i] <- 1}
+      if(timeline$label.dir[i] == "right") {timeline$text.adj[i] <- 0}
+
+    }
+
 
   }
  }
