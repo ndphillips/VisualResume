@@ -829,7 +829,7 @@ if(is.na(timeline$label.x[i])) {
    }
 
 
-   for(interest.i in 1:n.interests) {
+   for(interest.i in seq_len(n.interests)) {
 
      center.x <- locations$x[interest.i]
      center.y <- locations$y[interest.i]
