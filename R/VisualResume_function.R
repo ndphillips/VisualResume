@@ -137,7 +137,7 @@ bottom.graph.label <- timeline.labels[2]
 if(is.null(year.range)) {
 year.range <- c(floor(min(timeline$start)),
                 ceiling(max(timeline$end)))
-
+}
 year.min <- min(year.range)
 year.max <- max(year.range)
 
@@ -150,8 +150,6 @@ if(max(year.seq) != year.max) {
 
   year.min <- min(year.seq)
   year.max <- max(year.seq)
-
-}
 
 }
 
